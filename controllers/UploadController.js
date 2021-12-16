@@ -91,16 +91,15 @@ const Upload2 = (req, res) => {
                 ftp_client.on('ready', function () {
                     ftp_client.put(result, newpath, function (err) {
                         if (err) {
-                            // return res.json(err)
-                        } else {
-                            // return res.json("berhasil")
+                            return res.json(err)
                         }
-                        ftp_client.end();
                     });
                 });
             })
 
         })
+        //ftp_client.end();
+        return res.json("berhasil")
     })
 }
 
