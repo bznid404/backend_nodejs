@@ -75,14 +75,32 @@ const Upload = (req, res) => {
 }
 
 //Multiple File
-const Upload2 = (req,res) => {
-    
+const Upload2 = (req, res) => {
+    ftp_client.connect(ftp1);
+
     let form = new formidable.IncomingForm()
     form.parse(req, function (err, fields, files) {
-        for (let i = 0; i < files.length; i++){
-            return res.json(files[i].image)
-        }
-        return res.send(files)
+        // for (let i = 0; i < files.length; i++){
+        //     return res.json(files[i].image)
+        // }
+        var data_image = JSON.parse(JSON.stringify(form.openedFiles))
+        data_image.forEach(data => {
+
+            var newpath = '/' + data.originalFilename;
+            fs.readFile(data.filepath, (err, result) => {
+                ftp_client.on('ready', function () {
+                    ftp_client.put(result, newpath, function (err) {
+                        if (err) {
+                            // return res.json(err)
+                        } else {
+                            // return res.json("berhasil")
+                        }
+                        ftp_client.end();
+                    });
+                });
+            })
+
+        })
     })
 }
 
